@@ -35,6 +35,7 @@ const appNexusLogger = function (serviceName) {
 const authenticate = () => {
   return new Promise((resolve, reject) => {
     const authentication = new appNexusLogger("Authentication Service"); 
+    let dateTime = new Date;
 
     // keeping a file that is gitIgnored so that credentials are hopefully never accidentally uploaded to a repo
     fs.createReadStream('auth.json').pipe(request.post(('https://api-test.appnexus.com/auth'), function (error, response, body) {
@@ -45,11 +46,9 @@ const authenticate = () => {
         authentication.log(`statusCode: ${response && response.statusCode}`, authentication.severity.ERROR);
       }
 
-      console.log('response - ', response)
       if (typeof response === 'undefined') {
-        let dateTime = new Date;
         const fileName = 'noInternet.txt';
-        console.log(dateTime)
+        console.log(`no internet ${dateTime}`)
         fs.appendFile(fileName, `No Internet detected on ${dateTime} \n`, (err) => {
           if (err) throw err;
         });
@@ -62,7 +61,7 @@ const authenticate = () => {
         if (typeof(token) === 'undefined') {
           reject('No Token Available');
         }
-        authentication.log('Successfully logged in.');
+        console.log(`internet connected ${dateTime}`)
         resolve(token);
       }
     }));
