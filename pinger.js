@@ -70,5 +70,5 @@ const authenticate = () => {
 
 setInterval(() => {
   authenticate().catch((err) => console.log(err));
-}, 300000)
+}, 120000)
 
